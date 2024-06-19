@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\Paradigmi.csproj": {}
+    "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\Paradigmi.csproj": {
+    "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
+        "projectUniqueName": "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
         "projectName": "Paradigmi",
-        "projectPath": "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
+        "projectPath": "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
         "packagesPath": "C:\\Users\\Andrea\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\obj\\",
+        "outputPath": "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Andrea\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bcNjEzu4GbJXt7Yjr+lHcphbPPpLlB0dqQzy6iwudUcFu+f9GV8ac2E1ULkGDbVfZm1mML93gSAuwm1ydTujNA==",
+  "dgSpecHash": "LFxIBBXwR6CWmCkxN7dUH9n7Sjxq+cr9f4R0a5iNoyAVTzTN4gF+Nd7SW9HFp6MSKw5Dm9ZmNYcy0ZLRvavW/w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Andrea\\source\\repos\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
+  "projectFilePath": "C:\\Users\\Andrea\\Desktop\\Esercizi Università\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi\\Paradigmi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrea\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.0\\microsoft.aspnetcore.authentication.jwtbearer.5.0.0.nupkg.sha512",
     "C:\\Users\\Andrea\\.nuget\\packages\\microsoft.aspnetcore.authentication.openidconnect\\5.0.0\\microsoft.aspnetcore.authentication.openidconnect.5.0.0.nupkg.sha512",

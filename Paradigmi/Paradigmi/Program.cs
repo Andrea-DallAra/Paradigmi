@@ -11,6 +11,7 @@ namespace Paradigmi
 {
     public class Program
     {
+        //prova
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
