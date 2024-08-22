@@ -43,7 +43,7 @@ namespace Paradigmi.Dati
             }
         }
 
-        public async Task<Risorsa> CreateResourceAsync(Risorsa risorsa)
+        public async Task<Risorsa> CreaRisorsaAsync(Risorsa risorsa)
         {
             try
             {

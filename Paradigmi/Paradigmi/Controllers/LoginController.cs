@@ -11,6 +11,7 @@ using Paradigmi.Classi;
 using Paradigmi.TokenService;
 using Paradigmi.Dati;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Paradigmi.Controllers
 {
@@ -30,7 +31,7 @@ namespace Paradigmi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> Login([FromForm][Required] string email, [FromForm][Required] string password)
         {
             var user = await Autentica(email, password);
 
@@ -42,6 +43,7 @@ namespace Paradigmi.Controllers
 
             return Unauthorized("Invalid email or password.");
         }
+
         private async Task<Utente> Autentica(string email, string password)
         {
           

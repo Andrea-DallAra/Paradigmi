@@ -13,6 +13,8 @@ using Paradigmi.Classi;
 using Paradigmi.TokenService;
 using Paradigmi.Dati;
 using Paradigmi.Controllers;
+using System.Globalization;
+
 namespace Paradigmi
 {
     public class Startup
@@ -20,8 +22,11 @@ namespace Paradigmi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var cultureInfo = new CultureInfo("it-IT");
+            cultureInfo.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
+            cultureInfo.DateTimeFormat.LongDatePattern = "dd/MM/yyyy";
         }
-
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.

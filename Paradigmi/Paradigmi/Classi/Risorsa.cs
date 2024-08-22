@@ -20,6 +20,15 @@ namespace Paradigmi.Classi
         private string tipoRisorsa { get; set; }
 
         private ICollection<Booking> booking;
+
+
+        public Risorsa() { }
+        public Risorsa(String nome, String tipo) 
+        {
+            SetNome(nome);
+            SetTipoRisorsa(tipo);
+
+        }
         public int GetId()
         {
             return id;

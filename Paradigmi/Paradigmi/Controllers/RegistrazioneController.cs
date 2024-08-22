@@ -23,24 +23,13 @@ namespace Paradigmi.Controllers
             token = _token;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Utente>>> GetAllUsers()
-        {
-            try
-            {
-                var users = await utenteDC.GetUsersAsync();
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+       
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<Utente>> CreateUser([FromBody] Utente user)
+        public async Task<ActionResult<Utente>> CreateUser(String Nome, String Cognome, String Email, String Password)
         {
+            Utente user = new Utente(Nome,Cognome, Email, Password);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -58,7 +47,7 @@ namespace Paradigmi.Controllers
                 var createdUser = await utenteDC.CreateUserAsync(user);
                 var token = this.token.GenerateToken(createdUser);
 
-                return CreatedAtAction(nameof(GetUserById), new { userId = createdUser.getId() }, new { createdUser, token });
+                return CreatedAtAction(nameof(GetUserByEmail), new { userId = createdUser.getId() }, new { createdUser, token });
             }
             catch (Exception ex)
             {
@@ -66,12 +55,13 @@ namespace Paradigmi.Controllers
             }
         }
 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<Utente>> GetUserById(int userId)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("Get User")]
+        public async Task<ActionResult<Utente>> GetUserByEmail(String Email)
         {
             try
             {
-                var user = await utenteDC.GetUserByIdAsync(userId);
+                var user = await utenteDC.GetUserByEmailAsync(Email);
 
                 if (user == null)
                 {
@@ -86,56 +76,7 @@ namespace Paradigmi.Controllers
             }
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(int userId, [FromBody] Utente user)
-        {
-            if (userId != user.getId())
-            {
-                return BadRequest("User ID mismatch");
-            }
-
-            try
-            {
-                var existingUser = await utenteDC.GetUserByIdAsync(userId);
-                if (existingUser == null)
-                {
-                    return NotFound();
-                }
-
-           
-                existingUser.setEmail( user.getEmail());
-                existingUser.setNome(user.getNome());
-                existingUser.setcognome(user.getcognome());
-                existingUser.setPassword(user.getPassword()); 
-
-                await utenteDC.UpdateUserAsync(existingUser);
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(int userId)
-        {
-            try
-            {
-                var user = await utenteDC.GetUserByIdAsync(userId);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                await utenteDC.DeleteUserAsync(user);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+       
+      
     }
 }

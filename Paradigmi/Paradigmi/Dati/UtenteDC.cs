@@ -32,13 +32,13 @@ namespace Paradigmi.Dati
             }
         }
 
-        public async Task<Utente> GetUserByIdAsync(int userId)
+        public async Task<Utente> GetUserByEmailAsync(String mail)
         {
             try
             {
                 return await _context.utenti
                     .Include(u => u.getBookings()) 
-                    .FirstOrDefaultAsync(u => u.getId() == userId);
+                    .FirstOrDefaultAsync(u => u.getEmail() == mail);
             }
             catch (Exception ex)
             {

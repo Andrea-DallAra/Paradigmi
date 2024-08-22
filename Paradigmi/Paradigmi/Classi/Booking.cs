@@ -26,7 +26,12 @@ namespace Paradigmi.Classi
         private Risorsa risorsa;
         private Utente utente;
 
-
+        public Booking() { }
+        public Booking(DateTime inizio, DateTime fine) 
+        {
+            SetInizio(inizio);
+            SetFine(fine);
+        }
         public int GetId()
         {
             return id;

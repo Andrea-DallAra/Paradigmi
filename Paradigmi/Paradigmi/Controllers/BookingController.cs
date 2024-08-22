@@ -18,7 +18,7 @@ namespace Paradigmi.Controllers
         {
             _bookingRepository = bookingRepository;
         }
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
@@ -33,7 +33,8 @@ namespace Paradigmi.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("id")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
             try
@@ -53,9 +54,11 @@ namespace Paradigmi.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Booking>> AddBooking([FromBody] Booking booking)
+        [HttpPost("Prenota")]
+        public async Task<ActionResult<Booking>> Prenota([FromQuery] DateTime Inizio, [FromQuery] DateTime Fine, [FromQuery] int Codice)
         {
+            Booking booking = new Booking(Inizio, Fine);
+            booking.SetIdRisorsa(Codice);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -81,62 +84,11 @@ namespace Paradigmi.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Booking>> UpdateBooking([FromBody] Booking booking)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+      
 
-            try
-            {
-                var existingBooking = await _bookingRepository.GetBookingByIdAsync(booking.GetId());
 
-                if (existingBooking == null)
-                {
-                    return NotFound("Prenotazione non trovata.");
-                }
-
-                var isBooked = await _bookingRepository.IsResourceBookedAsync(booking.GetIdRisorsa(), booking.GetInizio(), booking.GetFine());
-
-                if (isBooked && existingBooking.GetIdRisorsa() != booking.GetIdRisorsa())
-                {
-                    return BadRequest("La prenotazione non e' disponibile per quella data.");
-                }
-
-                var updatedBooking = await _bookingRepository.UpdateBookingAsync(booking);
-
-                return Ok(updatedBooking);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
-        {
-            try
-            {
-                var success = await _bookingRepository.DeleteBookingAsync(id);
-
-                if (!success)
-                {
-                    return NotFound("Prenotazione non trovata.");
-                }
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        [HttpGet("availability")]
-        public async Task<ActionResult> SearchAvailability([FromQuery] DateTime dataInizio, [FromQuery] DateTime dataFine, [FromQuery] string codiceRisorsa, [FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("disponibilita'")]
+        public async Task<ActionResult> SearchAvailability([FromQuery] DateTime dataInizio, [FromQuery] DateTime dataFine,  [FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string codiceRisorsa = null)
         {
             try
             {

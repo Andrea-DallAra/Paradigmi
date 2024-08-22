@@ -48,5 +48,17 @@ namespace Paradigmi.Classi
         {
             return bookings;
         }
+
+        public Utente() 
+        {
+           
+        }
+        public Utente(String _nome, String _cognome, String _email, String _password) 
+        {
+            setNome(_nome);
+            setcognome(_cognome);
+            setEmail(_email);
+            setPassword(_password);
+        }
     }
 }
