@@ -34,7 +34,7 @@ namespace Paradigmi.Dati
             try
             {
               
-                return await _context.risorse.FirstOrDefaultAsync(r => r.GetId() == idrisorsa);
+                return await _context.risorse.FirstOrDefaultAsync(r => r.id == idrisorsa);
             }
             catch (Exception ex)
             {
@@ -45,6 +45,7 @@ namespace Paradigmi.Dati
 
         public async Task<Risorsa> CreaRisorsaAsync(Risorsa risorsa)
         {
+            
             try
             {
                 _context.risorse.Add(risorsa);
@@ -59,63 +60,29 @@ namespace Paradigmi.Dati
             }
         }
 
-        public async Task<Risorsa> UpdateResourceAsync(Risorsa risorsa)
-        {
-            try
-            {
-                _context.risorse.Update(risorsa);
-                await _context.SaveChangesAsync();
-                return risorsa;
-            }
-            catch (Exception ex)
-            {
-               
-                throw new Exception("Error updating resource.", ex);
-            }
-        }
-
-        public async Task<bool> DeleteResourceAsync(int idrisorsa)
-        {
-            try
-            {
-                var risorsa = await _context.risorse.FindAsync(idrisorsa);
-                if (risorsa == null)
-                {
-                    return false;
-                }
-
-                _context.risorse.Remove(risorsa);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-               
-                throw new Exception("Error deleting resource.", ex);
-            }
-        }
+  
 
         public async Task<IEnumerable<Risorsa>> GetAvailableResourcesAsync(DateTime startDate, DateTime endDate, string tipoRisorsa = null)
         {
             try
             {
                 
-                var query = _context.risorse.Include(r => r.GetBooking()).AsQueryable();
+                var query = _context.risorse.Include(r => r.booking).AsQueryable();
 
                 
                 if (!string.IsNullOrEmpty(tipoRisorsa))
                 {
-                    query = query.Where(r => r.GetTipoRisorsa() == tipoRisorsa);
+                    query = query.Where(r => r.tipoRisorsa == tipoRisorsa);
                 }
 
                
                 return await query
-                    .Where(r => !r.GetBooking().Any(b => b.GetInizio() < endDate && b.GetFine() > startDate))
+                    .Where(r => !r.booking.Any(b => b.inizio < endDate && b.fine > startDate))
                     .ToListAsync();
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching available resources.", ex);
+                throw new Exception("Error fetching  available resources.", ex);
             }
         }
 

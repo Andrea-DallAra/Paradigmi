@@ -12,6 +12,7 @@ using Paradigmi.TokenService;
 using Paradigmi.Dati;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Paradigmi.Controllers
 {
@@ -30,13 +31,17 @@ namespace Paradigmi.Controllers
             _tokenService = tokenService;
         }
 
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromForm][Required] string email, [FromForm][Required] string password)
         {
+
             var user = await Autentica(email, password);
 
             if (user != null)
             {
+                HttpContext.Session.SetInt32("UserId", user.id);
                 var token = _tokenService.GenerateToken(user);
                 return Ok(new { token });
             }
@@ -47,10 +52,10 @@ namespace Paradigmi.Controllers
         private async Task<Utente> Autentica(string email, string password)
         {
           
-            var user = await _context.utenti
-                .FirstOrDefaultAsync(u => u.getEmail().ToLower() == email.ToLower());
+            var user = await _context.utente
+                .FirstOrDefaultAsync(u => u.email.ToLower() == email.ToLower());
 
-            if (user != null && VerifyPassword(password, user.getPassword()))
+            if (user != null && VerifyPassword(password, user.password))
             {
                 return user;
             }

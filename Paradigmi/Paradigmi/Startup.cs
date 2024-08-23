@@ -32,31 +32,38 @@ namespace Paradigmi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Aggiungi i controller
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Imposta il timeout della sessione
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddControllersWithViews();
+
+         
             services.AddControllers();
 
-            // Configura i repository (se li stai usando)
             services.AddScoped<BookingDc>();
             services.AddScoped<UtenteDC>();
             services.AddScoped<RisorsaDC>();
-
-            // Configura TokenService
+      
             services.AddSingleton<Token>();
 
-            // Configura Swagger/OpenAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Paradigmi", Version = "1.0" });
-                // c.EnableAnnotations(); // Rimuovilo se non necessario o non supportato
+                
             });
 
-            // Configura il DbContext per connettersi al database
+
             services.AddDbContext<DC>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // Configura l'autenticazione JWT
             var jwtKey = Configuration["Jwt:Key"];
             var jwtIssuer = Configuration["Jwt:Issuer"];
 

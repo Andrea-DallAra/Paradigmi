@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Paradigmi.Classi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Paradigmi.Classi;
 
 namespace Paradigmi.Dati
 {
@@ -20,7 +20,7 @@ namespace Paradigmi.Dati
         {
             try
             {
-                return await _context.bookings.Include(b => b.GetRisorsa()).Include(b => b.GetUtente()).ToListAsync();
+                return await _context.bookings.Include(b => b.risorsa).Include(b => b.utente).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -33,9 +33,9 @@ namespace Paradigmi.Dati
             try
             {
                 return await _context.bookings
-                    .Include(b => b.GetRisorsa())
-                    .Include(b => b.GetUtente())
-                    .FirstOrDefaultAsync(b => b.GetId() == bookingId);
+                    .Include(b => b.risorsa)
+                    .Include(b => b.utente)
+                    .FirstOrDefaultAsync(b => b.id == bookingId);
             }
             catch (Exception ex)
             {
@@ -57,20 +57,7 @@ namespace Paradigmi.Dati
             }
         }
 
-        public async Task<Booking> UpdateBookingAsync(Booking booking)
-        {
-            try
-            {
-                _context.bookings.Update(booking);
-                await _context.SaveChangesAsync();
-                return booking;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Errore nell'aggiornare booking.", ex);
-            }
-        }
-
+/*
         public async Task<bool> DeleteBookingAsync(int bookingId)
         {
             try
@@ -90,24 +77,28 @@ namespace Paradigmi.Dati
                 throw new Exception("Errore nell'eliminare booking.", ex);
             }
         }
-
+*/
         public async Task<bool> IsResourceBookedAsync(int resourceId, DateTime startDate, DateTime endDate)
         {
             return await _context.bookings
-                .AnyAsync(b => b.GetIdRisorsa() == resourceId && (b.GetInizio() < endDate && b.GetFine() > startDate));
+                .AnyAsync(b => b.idRisorsa== resourceId && (b.inizio < endDate && b.fine> startDate));
         }
 
-        public async Task<(IEnumerable<Risorsa> AvailableResources, int TotalResults, int TotalPages)> GetAvailableResourcesAsync(DateTime startDate, DateTime endDate, string resourceType, int page, int pageSize)
+        public async Task<(IEnumerable<Risorsa> AvailableResources, int TotalResults, int TotalPages)> GetAvailableResourcesAsync(DateTime inizio, DateTime fine, string resourceType, int page, int pageSize)
         {
+            
             var bookedResourceIds = await _context.bookings
-                .Where(b => string.IsNullOrEmpty(resourceType) || b.GetRisorsa().GetTipoRisorsa() == resourceType)
-                .Select(b => b.GetIdRisorsa())
-                .Distinct()
-                .ToListAsync();
+            .Where(b => (b.inizio >= inizio && b.fine <= fine) &&                 
+                   (string.IsNullOrEmpty(resourceType) || b.risorsa.tipoRisorsa == resourceType)
+                   )
+            .Select(b => b.idRisorsa)
+            .Distinct()
+            .ToListAsync();
+
 
             var availableResourcesQuery = _context.risorse
-                .Where(r => !bookedResourceIds.Contains(r.GetId()) &&
-                            (string.IsNullOrEmpty(resourceType) || r.GetTipoRisorsa() == resourceType));
+                .Where(r => !bookedResourceIds.Contains(r.id) &&
+                            (string.IsNullOrEmpty(resourceType) || r.tipoRisorsa == resourceType));
 
             var totalResources = await availableResourcesQuery.CountAsync();
 

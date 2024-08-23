@@ -40,9 +40,9 @@ namespace Paradigmi.TokenService
             // Definisce le claims da includere nel token JWT, come l'ID dell'utente, l'email e il nome.
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.getId().ToString()),
-                new Claim(ClaimTypes.Email, user.getEmail()),
-                new Claim(ClaimTypes.Name, user.getNome())
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Name, user.nome)
             };
 
             // Crea un oggetto JwtSecurityToken utilizzando l'origine, le claims e il tempo di scadenza.

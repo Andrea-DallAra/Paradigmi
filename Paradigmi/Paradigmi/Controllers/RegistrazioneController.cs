@@ -38,7 +38,7 @@ namespace Paradigmi.Controllers
             try
             {
                 var existingUsers = await utenteDC.GetUsersAsync();
-                if (existingUsers.Any(u => u.getEmail() == user.getEmail()))
+                if (existingUsers.Any(u => u.email == user.email))
                 {
                     return Conflict("Email gia' registrata.");
                 }
@@ -47,7 +47,7 @@ namespace Paradigmi.Controllers
                 var createdUser = await utenteDC.CreateUserAsync(user);
                 var token = this.token.GenerateToken(createdUser);
 
-                return CreatedAtAction(nameof(GetUserByEmail), new { userId = createdUser.getId() }, new { createdUser, token });
+                return CreatedAtAction(nameof(GetUserByEmail), new { userId = createdUser.id }, new { createdUser, token });
             }
             catch (Exception ex)
             {

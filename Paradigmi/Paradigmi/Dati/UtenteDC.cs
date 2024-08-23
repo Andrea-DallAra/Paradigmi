@@ -19,26 +19,21 @@ namespace Paradigmi.Dati
 
         public async Task<IEnumerable<Utente>> GetUsersAsync()
         {
-            try
-            {
-                return await _context.utenti
-                    .Include(u => u.getBookings()) 
+           
+                return await _context.utente
+                    .Include(u => u.bookings) 
                     .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-        
-                throw new Exception("Error fetching users.", ex);
-            }
+            
+         
         }
 
         public async Task<Utente> GetUserByEmailAsync(String mail)
         {
             try
             {
-                return await _context.utenti
-                    .Include(u => u.getBookings()) 
-                    .FirstOrDefaultAsync(u => u.getEmail() == mail);
+                return await _context.utente
+                    .Include(u => u.bookings) 
+                    .FirstOrDefaultAsync(u => u.email == mail);
             }
             catch (Exception ex)
             {
@@ -52,8 +47,8 @@ namespace Paradigmi.Dati
             try
             {
                 
-                user.setPassword(HashPassword(user.getPassword()));
-                _context.utenti.Add(user);
+                user.password = HashPassword(user.password);
+                _context.utente.Add(user);
                 await _context.SaveChangesAsync();
                 return user;
             }
@@ -67,8 +62,8 @@ namespace Paradigmi.Dati
         {
             try
             {
-                var user = await _context.utenti.FirstOrDefaultAsync(u => u.getEmail() == email) ;
-                if (user != null && VerifyPassword(password, user.getPassword()))
+                var user = await _context.utente.FirstOrDefaultAsync(u => u.email == email) ;
+                if (user != null && VerifyPassword(password, user.password))
                 {
                     return user;
                 }
@@ -86,8 +81,8 @@ namespace Paradigmi.Dati
             try
             {
                 
-                user.setPassword(HashPassword(user.getPassword()));
-                _context.utenti.Update(user);
+                user.password = HashPassword(user.password);
+                _context.utente.Update(user);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -101,7 +96,7 @@ namespace Paradigmi.Dati
         {
             try
             {
-                _context.utenti.Remove(user);
+                _context.utente.Remove(user);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

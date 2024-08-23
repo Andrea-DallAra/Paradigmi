@@ -13,10 +13,11 @@ namespace Paradigmi.Controllers
     public class RisorsaController : ControllerBase
     {
         private readonly RisorsaDC _risorsaDC;
+        private readonly BookingDc _bookingDC;
 
-        public RisorsaController(RisorsaDC resourceRepository)
+        public RisorsaController(RisorsaDC _RisDC)
         {
-            _risorsaDC = resourceRepository;
+            _risorsaDC = _RisDC;
         }
 
 
@@ -44,6 +45,7 @@ namespace Paradigmi.Controllers
         [HttpPost("Crea Risorsa")]
         public async Task<ActionResult<Risorsa>> AddResource([FromQuery] string nome, [FromQuery] string tipoRisorsa)
         {
+            
             Risorsa risorsa = new Risorsa(nome, tipoRisorsa);
             if (!ModelState.IsValid)
             {
@@ -52,9 +54,11 @@ namespace Paradigmi.Controllers
 
             try
             {
+               
+
                 var createdResource = await _risorsaDC.CreaRisorsaAsync(risorsa);
 
-                return CreatedAtAction(nameof(GetResource), new { id = createdResource.GetId() }, createdResource);
+                return CreatedAtAction(nameof(GetResource), new { id = createdResource.id }, createdResource);
             }
             catch (Exception ex)
             {

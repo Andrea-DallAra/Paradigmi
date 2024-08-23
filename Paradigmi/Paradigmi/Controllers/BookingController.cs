@@ -12,11 +12,11 @@ namespace Paradigmi.Controllers
     [Route("[controller]")]
     public class BookingController : ControllerBase
     {
-        private readonly BookingDc _bookingRepository;
+        private readonly BookingDc _bookingDC;
 
         public BookingController(BookingDc bookingRepository)
         {
-            _bookingRepository = bookingRepository;
+            _bookingDC = bookingRepository;
         }
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
@@ -24,7 +24,7 @@ namespace Paradigmi.Controllers
         {
             try
             {
-                var bookings = await _bookingRepository.GetBookingsAsync();
+                var bookings = await _bookingDC.GetBookingsAsync();
                 return Ok(bookings);
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace Paradigmi.Controllers
         {
             try
             {
-                var booking = await _bookingRepository.GetBookingByIdAsync(id);
+                var booking = await _bookingDC.GetBookingByIdAsync(id);
 
                 if (booking == null)
                 {
@@ -54,11 +54,13 @@ namespace Paradigmi.Controllers
             }
         }
 
+     
+
         [HttpPost("Prenota")]
         public async Task<ActionResult<Booking>> Prenota([FromQuery] DateTime Inizio, [FromQuery] DateTime Fine, [FromQuery] int Codice)
         {
             Booking booking = new Booking(Inizio, Fine);
-            booking.SetIdRisorsa(Codice);
+            booking.idRisorsa =  Codice;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -67,16 +69,16 @@ namespace Paradigmi.Controllers
             try
             {
                
-                var isBooked = await _bookingRepository.IsResourceBookedAsync(booking.GetIdRisorsa(), booking.GetInizio(), booking.GetFine());
+                var isBooked = await _bookingDC.IsResourceBookedAsync(booking.idRisorsa, booking.inizio, booking.fine);
 
                 if (isBooked)
                 {
                     return BadRequest("La prenotazione non e' disponibile per quella data.");
                 }
 
-                var createdBooking = await _bookingRepository.CreateBookingAsync(booking);
+                var createdBooking = await _bookingDC.CreateBookingAsync(booking);
 
-                return CreatedAtAction(nameof(GetBooking), new { id = createdBooking.GetId() }, createdBooking);
+                return CreatedAtAction(nameof(GetBooking), new { id = createdBooking.id }, createdBooking);
             }
             catch (Exception ex)
             {
@@ -98,7 +100,7 @@ namespace Paradigmi.Controllers
                     return BadRequest("DataInizio deve essere precedente a DataFine.");
                 }
 
-                var (availableResources, totalResults, totalPages) = await _bookingRepository.GetAvailableResourcesAsync(dataInizio, dataFine, codiceRisorsa, page, pageSize);
+                var (availableResources, totalResults, totalPages) = await _bookingDC.GetAvailableResourcesAsync(dataInizio, dataFine, codiceRisorsa, page, pageSize);
 
                 var result = new
                 {

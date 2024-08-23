@@ -13,26 +13,40 @@ namespace Paradigmi.Dati
         {
         }
 
-        public DbSet<Utente> utenti { get; set; }
+        public DbSet<Utente> utente { get; set; }
         public DbSet<Risorsa> risorse { get; set; }
         public DbSet<Booking> bookings { get; set; }
 
+        public  bool TestConnection()
+        {
+            try
+            {
+                return this.Database.CanConnect();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Connection failed: {ex.Message}");
+                return false;
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Ensure email is unique
-            modelBuilder.Entity<Utente>().HasIndex(u => u.getEmail()).IsUnique();
 
-            // One-to-many relationship between User and Booking
+            modelBuilder.Entity<Utente>().ToTable("utente", "dbo");
+            modelBuilder.Entity<Utente>().HasIndex(u => u.email).IsUnique();
+
+           
             modelBuilder.Entity<Utente>()
-                .HasMany(u => u.getBookings())
-                 .WithOne(b => b.GetUtente())
-                 .HasForeignKey(b => b.GetIdUtente());
+                .HasMany(u => u.bookings)
+                 .WithOne(b => b.utente)
+                 .HasForeignKey(b => b.idUtente);
 
-            // One-to-many relationship between Resource and Booking
+           
             modelBuilder.Entity<Risorsa>()
-                .HasMany(r => r.GetBooking())
-              .WithOne(b => b.GetRisorsa())
-               .HasForeignKey(b => b.GetIdRisorsa());
+                .HasMany(r => r.booking)
+              .WithOne(b => b.risorsa)
+               .HasForeignKey(b => b.idRisorsa);
 
 
             base.OnModelCreating(modelBuilder);

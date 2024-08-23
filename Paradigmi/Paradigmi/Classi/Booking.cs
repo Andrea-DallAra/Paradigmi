@@ -2,129 +2,42 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Paradigmi.Classi
 {
-    [Table("Booking")]
+    [Table("booking", Schema = "dbo")]
     public class Booking
     {
         [Key]
-        private int id;
+        public int id { get; set; }
 
         [ForeignKey("IdRisorsa")]
-        private int idRisorsa;
+        public int idRisorsa { get; set; }
 
         [ForeignKey("IdUtente")]
-        private int idUtente;
+        public int idUtente { get; set; }
 
         [Required]
-        private DateTime inizio;
+        public DateTime inizio { get; set; }
 
         [Required]
-        private DateTime fine;
+        public DateTime fine { get; set; }
 
-        private Risorsa risorsa;
-        private Utente utente;
+        [JsonIgnore]
+        public Risorsa risorsa { get; set; }
+        public Utente utente { get; set; }
 
         public Booking() { }
-        public Booking(DateTime inizio, DateTime fine) 
-        {
-            SetInizio(inizio);
-            SetFine(fine);
-        }
-        public int GetId()
-        {
-            return id;
-        }
-
-        public void SetId(int _id)
-        {
-            if (_id <= 0)
-            {
-                throw new ArgumentException("l'id deve essere positivo.");
-            }
-            id = _id;
-        }
-
-        public int GetIdRisorsa()
-        {
-            return idRisorsa;
-        }
-
-        public void SetIdRisorsa(int _idRisorsa)
-        {
-            if (_idRisorsa <= 0)
-            {
-                throw new ArgumentException("IdRisorsa deve essere positivo.");
-            }
-            idRisorsa = _idRisorsa;
-        }
-
-        public int GetIdUtente()
-        {
-            return idUtente;
-        }
-
-        public void SetIdUtente(int _idUtente)
-        {
-            if (_idUtente <= 0)
-            {
-                throw new ArgumentException("IdUtente deve essere positivo.");
-            }
-            idUtente = _idUtente;
-        }
-
-        public DateTime GetInizio()
-        {
-            return inizio;
-        }
-
-        public void SetInizio(DateTime _inizio)
+        public Booking(DateTime _inizio, DateTime _fine, Risorsa _risorsa = null, Utente _utente = null)
         {
             inizio = _inizio;
-        }
-
-        public DateTime GetFine()
-        {
-            return fine;
-        }
-
-        public void SetFine(DateTime _fine)
-        {
-
-            if (_fine < inizio)
-            {
-                throw new ArgumentException("La data di fine non puo' essere precedente a quella di inizio.");
-            }
             fine = _fine;
-        }
-
-        public Risorsa GetRisorsa()
-        {
-            return risorsa;
-        }
-
-        public void SetRisorsa(Risorsa _risorsa)
-        {
-            if (_risorsa == null)
-            {
-                throw new ArgumentNullException("Risorsa non puo' essere null.");
-            }
             risorsa = _risorsa;
-        }
-
-        public Utente GetUtente()
-        {
-            return utente;
-        }
-
-        public void SetUtente(Utente _utente)
-        {
-            if (_utente == null)
-            {
-                throw new ArgumentNullException("Utente non puo' essere null.");
-            }
             utente = _utente;
         }
+
+
+
     }
 }
