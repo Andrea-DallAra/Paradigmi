@@ -16,7 +16,7 @@ namespace Paradigmi.Dati
             _context = context;
         }
 
-        public async Task<IEnumerable<Risorsa>> GetResourcesAsync()
+        public async Task<IEnumerable<Risorsa>> GetRisorseAsync()
         {
             try
             {
@@ -25,11 +25,11 @@ namespace Paradigmi.Dati
             catch (Exception ex)
             {
                
-                throw new Exception("Error fetching resources.", ex);
+                throw new Exception("Errore nella ricerca delle risorse", ex);
             }
         }
 
-        public async Task<Risorsa> GetResourceByIdAsync(int idrisorsa)
+        public async Task<Risorsa> GetRisorseIdAsync(int idrisorsa)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Paradigmi.Dati
             catch (Exception ex)
             {
                 
-                throw new Exception("Error fetching resource by ID.", ex);
+                throw new Exception("Errore nella ricerca della risorsa per id.", ex);
             }
         }
 
@@ -56,13 +56,13 @@ namespace Paradigmi.Dati
             catch (Exception ex)
             {
             
-                throw new Exception("Error creating resource.", ex);
+                throw new Exception("Errore nella creazione delle risorse.", ex);
             }
         }
 
   
 
-        public async Task<IEnumerable<Risorsa>> GetAvailableResourcesAsync(DateTime startDate, DateTime endDate, string tipoRisorsa = null)
+        public async Task<IEnumerable<Risorsa>> GetRisorseDisponibiliAsync(DateTime startDate, DateTime endDate, string tipoRisorsa = null)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Paradigmi.Dati
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching  available resources.", ex);
+                throw new Exception("Errore durante la ricerca delle risorse.", ex);
             }
         }
 

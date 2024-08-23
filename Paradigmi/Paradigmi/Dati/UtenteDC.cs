@@ -17,7 +17,7 @@ namespace Paradigmi.Dati
             _context = context;
         }
 
-        public async Task<IEnumerable<Utente>> GetUsersAsync()
+        public async Task<IEnumerable<Utente>> GetUtenteAsync()
         {
            
                 return await _context.utente
@@ -27,7 +27,7 @@ namespace Paradigmi.Dati
          
         }
 
-        public async Task<Utente> GetUserByEmailAsync(String mail)
+        public async Task<Utente> GetUtenteEmailAsync(String mail)
         {
             try
             {
@@ -38,11 +38,11 @@ namespace Paradigmi.Dati
             catch (Exception ex)
             {
                 
-                throw new Exception("Error fetching user by ID.", ex);
+                throw new Exception("Errore nella ricerca dell'utente tramite mail.", ex);
             }
         }
 
-        public async Task<Utente> CreateUserAsync(Utente user)
+        public async Task<Utente> CreaUtenteAsync(Utente user)
         {
             try
             {
@@ -54,16 +54,16 @@ namespace Paradigmi.Dati
             }
             catch (Exception ex)
             {
-                throw new Exception("Error creating user.", ex);
+                throw new Exception("Errore nella creazione dell'utente.", ex);
             }
         }
 
-        public async Task<Utente> AuthenticateUserAsync(string email, string password)
+        public async Task<Utente> AutenticaUtenteAsync(string email, string password)
         {
             try
             {
                 var user = await _context.utente.FirstOrDefaultAsync(u => u.email == email) ;
-                if (user != null && VerifyPassword(password, user.password))
+                if (user != null && ControllaPassword(password, user.password))
                 {
                     return user;
                 }
@@ -72,39 +72,10 @@ namespace Paradigmi.Dati
             catch (Exception ex)
             {
             
-                throw new Exception("Error authenticating user.", ex);
+                throw new Exception("Errore nell'autenticazione", ex);
             }
         }
 
-        public async Task UpdateUserAsync(Utente user)
-        {
-            try
-            {
-                
-                user.password = HashPassword(user.password);
-                _context.utente.Update(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-            
-                throw new Exception("Error updating user.", ex);
-            }
-        }
-
-        public async Task DeleteUserAsync(Utente user)
-        {
-            try
-            {
-                _context.utente.Remove(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-               
-                throw new Exception("Error deleting user.", ex);
-            }
-        }
 
         private string HashPassword(string password)
         {
@@ -116,7 +87,7 @@ namespace Paradigmi.Dati
             }
         }
 
-        private bool VerifyPassword(string enteredPassword, string storedHash)
+        private bool ControllaPassword(string enteredPassword, string storedHash)
         {
             var enteredHash = HashPassword(enteredPassword);
             return enteredHash == storedHash;

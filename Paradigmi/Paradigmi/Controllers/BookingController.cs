@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Paradigmi.Classi;
 using Paradigmi.Dati;
+using Microsoft.AspNetCore.Http;
 
 namespace Paradigmi.Controllers
 {
@@ -24,7 +25,7 @@ namespace Paradigmi.Controllers
         {
             try
             {
-                var bookings = await _bookingDC.GetBookingsAsync();
+                var bookings = await _bookingDC.GetPrenotazioniAsync();
                 return Ok(bookings);
             }
             catch (Exception ex)
@@ -39,7 +40,7 @@ namespace Paradigmi.Controllers
         {
             try
             {
-                var booking = await _bookingDC.GetBookingByIdAsync(id);
+                var booking = await _bookingDC.GetPrenotazioniIdAsync(id);
 
                 if (booking == null)
                 {
@@ -54,13 +55,24 @@ namespace Paradigmi.Controllers
             }
         }
 
-     
+
 
         [HttpPost("Prenota")]
         public async Task<ActionResult<Booking>> Prenota([FromQuery] DateTime Inizio, [FromQuery] DateTime Fine, [FromQuery] int Codice)
         {
-            Booking booking = new Booking(Inizio, Fine);
-            booking.idRisorsa =  Codice;
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                return Unauthorized("Devi prima effettuare il login.");
+            }
+
+            Booking booking = new Booking(Inizio, Fine)
+            {
+                idRisorsa = Codice,
+                idUtente = userId.Value 
+            };
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -68,15 +80,14 @@ namespace Paradigmi.Controllers
 
             try
             {
-               
-                var isBooked = await _bookingDC.IsResourceBookedAsync(booking.idRisorsa, booking.inizio, booking.fine);
+                var isBooked = await _bookingDC.ControlloPrenotazioneAsync(booking.idRisorsa, booking.inizio, booking.fine);
 
                 if (isBooked)
                 {
                     return BadRequest("La prenotazione non e' disponibile per quella data.");
                 }
 
-                var createdBooking = await _bookingDC.CreateBookingAsync(booking);
+                var createdBooking = await _bookingDC.PrenotaAsync(booking);
 
                 return CreatedAtAction(nameof(GetBooking), new { id = createdBooking.id }, createdBooking);
             }
@@ -86,7 +97,8 @@ namespace Paradigmi.Controllers
             }
         }
 
-      
+
+
 
 
         [HttpGet("disponibilita'")]

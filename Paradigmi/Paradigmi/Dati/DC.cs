@@ -25,7 +25,7 @@ namespace Paradigmi.Dati
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Connection failed: {ex.Message}");
+                Console.WriteLine($"Connessione fallita: {ex.Message}");
                 return false;
             }
         }

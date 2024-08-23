@@ -24,7 +24,7 @@ namespace Paradigmi.Classi
         [Required]
         public DateTime fine { get; set; }
 
-        [JsonIgnore]
+       
         public Risorsa risorsa { get; set; }
         public Utente utente { get; set; }
 

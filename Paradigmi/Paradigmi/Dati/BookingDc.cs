@@ -16,7 +16,7 @@ namespace Paradigmi.Dati
             _context = context;
         }
 
-        public async Task<IEnumerable<Booking>> GetBookingsAsync()
+        public async Task<IEnumerable<Booking>> GetPrenotazioniAsync()
         {
             try
             {
@@ -24,11 +24,11 @@ namespace Paradigmi.Dati
             }
             catch (Exception ex)
             {
-                throw new Exception("Errore durante la ricerca di bookings.", ex);
+                throw new Exception("Errore durante la ricerca delle prenotazioni.", ex);
             }
         }
 
-        public async Task<Booking> GetBookingByIdAsync(int bookingId)
+        public async Task<Booking> GetPrenotazioniIdAsync(int bookingId)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Paradigmi.Dati
             }
         }
 
-        public async Task<Booking> CreateBookingAsync(Booking booking)
+        public async Task<Booking> PrenotaAsync(Booking booking)
         {
             try
             {
@@ -53,32 +53,12 @@ namespace Paradigmi.Dati
             }
             catch (Exception ex)
             {
-                throw new Exception("Errore nella creazione di booking.", ex);
+                throw new Exception("Errore nella prenotazione.", ex);
             }
         }
 
-/*
-        public async Task<bool> DeleteBookingAsync(int bookingId)
-        {
-            try
-            {
-                var booking = await _context.bookings.FindAsync(bookingId);
-                if (booking == null)
-                {
-                    return false;
-                }
 
-                _context.bookings.Remove(booking);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Errore nell'eliminare booking.", ex);
-            }
-        }
-*/
-        public async Task<bool> IsResourceBookedAsync(int resourceId, DateTime startDate, DateTime endDate)
+        public async Task<bool> ControlloPrenotazioneAsync(int resourceId, DateTime startDate, DateTime endDate)
         {
             return await _context.bookings
                 .AnyAsync(b => b.idRisorsa== resourceId && (b.inizio < endDate && b.fine> startDate));

@@ -36,18 +36,20 @@ namespace Paradigmi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromForm][Required] string email, [FromForm][Required] string password)
         {
-
             var user = await Autentica(email, password);
 
             if (user != null)
             {
+               
                 HttpContext.Session.SetInt32("UserId", user.id);
+
                 var token = _tokenService.GenerateToken(user);
                 return Ok(new { token });
             }
 
-            return Unauthorized("Invalid email or password.");
+            return Unauthorized("Email o password non valide.");
         }
+
 
         private async Task<Utente> Autentica(string email, string password)
         {
@@ -55,7 +57,7 @@ namespace Paradigmi.Controllers
             var user = await _context.utente
                 .FirstOrDefaultAsync(u => u.email.ToLower() == email.ToLower());
 
-            if (user != null && VerifyPassword(password, user.password))
+            if (user != null && VerificaPassword(password, user.password))
             {
                 return user;
             }
@@ -74,7 +76,7 @@ namespace Paradigmi.Controllers
             }
         }
 
-        private bool VerifyPassword(string enteredPassword, string storedHash)
+        private bool VerificaPassword(string enteredPassword, string storedHash)
         {
             var enteredHash = HashPassword(enteredPassword);
             return enteredHash == storedHash;

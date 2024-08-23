@@ -13,7 +13,6 @@ namespace Paradigmi.Controllers
     public class RisorsaController : ControllerBase
     {
         private readonly RisorsaDC _risorsaDC;
-        private readonly BookingDc _bookingDC;
 
         public RisorsaController(RisorsaDC _RisDC)
         {
@@ -27,7 +26,7 @@ namespace Paradigmi.Controllers
         {
             try
             {
-                var resource = await _risorsaDC.GetResourceByIdAsync(id);
+                var resource = await _risorsaDC.GetRisorseIdAsync(id);
 
                 if (resource == null)
                 {

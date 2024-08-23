@@ -29,41 +29,33 @@ namespace Paradigmi
         
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // Imposta il timeout della sessione
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
-            services.AddControllersWithViews();
-
-         
+            
             services.AddControllers();
 
+            
             services.AddScoped<BookingDc>();
             services.AddScoped<UtenteDC>();
             services.AddScoped<RisorsaDC>();
-      
+
+           
             services.AddSingleton<Token>();
 
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Paradigmi", Version = "1.0" });
-                
             });
 
-
+           
             services.AddDbContext<DC>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+          
             var jwtKey = Configuration["Jwt:Key"];
             var jwtIssuer = Configuration["Jwt:Issuer"];
 
@@ -93,9 +85,18 @@ namespace Paradigmi
             });
 
             services.AddAuthorization();
+
+            
+            services.AddDistributedMemoryCache(); 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(120); 
+                options.Cookie.HttpOnly = true; 
+                options.Cookie.IsEssential = true; 
+            });
         }
 
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -109,7 +110,10 @@ namespace Paradigmi
 
             app.UseRouting();
 
-            app.UseAuthentication(); 
+           
+            app.UseSession();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -117,5 +121,6 @@ namespace Paradigmi
                 endpoints.MapControllers();
             });
         }
+
     }
 }

@@ -37,14 +37,14 @@ namespace Paradigmi.Controllers
 
             try
             {
-                var existingUsers = await utenteDC.GetUsersAsync();
+                var existingUsers = await utenteDC.GetUtenteAsync();
                 if (existingUsers.Any(u => u.email == user.email))
                 {
                     return Conflict("Email gia' registrata.");
                 }
 
               
-                var createdUser = await utenteDC.CreateUserAsync(user);
+                var createdUser = await utenteDC.CreaUtenteAsync(user);
                 var token = this.token.GenerateToken(createdUser);
 
                 return CreatedAtAction(nameof(GetUserByEmail), new { userId = createdUser.id }, new { createdUser, token });
@@ -56,12 +56,12 @@ namespace Paradigmi.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet("Get User")]
+        [HttpGet("Get Utente")]
         public async Task<ActionResult<Utente>> GetUserByEmail(String Email)
         {
             try
             {
-                var user = await utenteDC.GetUserByEmailAsync(Email);
+                var user = await utenteDC.GetUtenteEmailAsync(Email);
 
                 if (user == null)
                 {
